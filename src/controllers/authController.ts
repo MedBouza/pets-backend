@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { generateAccessToken, generateRefreshToken, userLoginService, userSignUpService } from '../services/authService';
+import { userLoginService, userSignUpService } from '../services/authService';
 
 import dotenv from 'dotenv';
 import errorHandler from '../helper/errorHandler';
@@ -7,23 +7,23 @@ import errorHandler from '../helper/errorHandler';
 dotenv.config();
 
 export const userLogin = async (req: Request, res: Response) => {
-   const { email, password } = req.body;
+  const { email, password } = req.body;
 
-   try {
-      const result = await userLoginService(email, password);
-      res.json(result);
-   } catch (error) {
-      errorHandler(error, res);
-   }
+  try {
+    const result = await userLoginService(email, password);
+    res.json(result);
+  } catch (error) {
+    errorHandler(error, res);
+  }
 };
 export const userSignUp = async (req: Request, res: Response) => {
-   const { name, email, password } = req.body;
-   try {
-      const result = await userSignUpService({ name, email, password });
-      res.json(result);
-   } catch (error) {
-      errorHandler(error, res);
-   }
+  const { name, email, password } = req.body;
+  try {
+    const result = await userSignUpService({ name, email, password });
+    res.json(result);
+  } catch (error) {
+    errorHandler(error, res);
+  }
 };
 
 // with then catch
