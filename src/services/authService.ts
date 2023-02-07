@@ -3,7 +3,24 @@ import bcrypt from 'bcrypt';
 
 import jwt from 'jsonwebtoken';
 import { addUser } from './userService';
+export const generateAccessToken = (user: Partial<IUserModel>) =>
+  jwt.sign(
+    { _id: user._id, email: user.email },
+    process.env.ACCESS_TOKEN_SECRET as string,
+    { expiresIn: '15m' },
+  );
 
+export const generateRefreshToken = (user: Partial<IUserModel>) => {
+  const refreshTokens = [];
+
+  const refreshToken = jwt.sign(
+    { _id: user._id, email: user.email },
+    process.env.REFRESH_TOKEN_SECRET as string,
+    { expiresIn: '20m' },
+  );
+  refreshTokens.push(refreshToken);
+  return refreshToken;
+};
 export const getUserByEmail = (email: string) => Users.findOne({ email });
 
 export const userLoginService = async (email: string, password: string) => {
@@ -25,22 +42,10 @@ export const userSignUpService = async (userData: Partial<IUserModel>) => {
   const refreshToken = generateRefreshToken(user);
   return { user, accessToken, refreshToken };
 };
-
-export const generateAccessToken = (user: Partial<IUserModel>) =>
-  jwt.sign(
-    { _id: user._id, email: user.email },
-    process.env.ACCESS_TOKEN_SECRET as string,
-    { expiresIn: '15m' },
-  );
-
-export const generateRefreshToken = (user: Partial<IUserModel>) => {
-  const refreshTokens = [];
-
-  const refreshToken = jwt.sign(
-    { _id: user._id, email: user.email },
+export const refreshTokenService = async (rToken: string) => {
+  const decoded = jwt.verify(
+    rToken,
     process.env.REFRESH_TOKEN_SECRET as string,
-    { expiresIn: '20m' },
   );
-  refreshTokens.push(refreshToken);
-  return refreshToken;
+  return decoded;
 };

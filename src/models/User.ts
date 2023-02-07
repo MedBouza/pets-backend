@@ -2,10 +2,13 @@ import mongoose, { Document, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 export interface IUser {
-  name: string;
+  firstname: string;
+  lastname: string;
   email: string;
   password?: string;
   avatar?: string;
+  accessToken?: string;
+  refreshToken?: string;
 }
 export interface IUserModel extends IUser, Document {}
 
@@ -13,10 +16,13 @@ export interface IUserModel extends IUser, Document {}
 // add email and timestamp
 const UserSchema: Schema = new Schema(
   {
-    name: { type: String, required: true },
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
     avatar: { type: String },
+    accessToken: { type: String },
+    refreshToken: { type: String },
   },
   { timestamps: true },
 );

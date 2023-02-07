@@ -39,7 +39,7 @@ export const ReadAll = async (req: Request, res: Response) => {
 
   try {
     const Pet = await getPetByName(keyword);
-    res.status(200).json({ Pet });
+    res.status(200).json(Pet);
   } catch (error) {
     errorHandler(error, res);
   }
