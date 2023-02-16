@@ -3,11 +3,12 @@ import bcrypt from 'bcrypt';
 
 import jwt from 'jsonwebtoken';
 import { addUser } from './userService';
+//TODO refresh expired token
 export const generateAccessToken = (user: Partial<IUserModel>) =>
   jwt.sign(
     { _id: user._id, email: user.email },
     process.env.ACCESS_TOKEN_SECRET as string,
-    { expiresIn: '15m' },
+    { expiresIn: '1d' },
   );
 
 export const generateRefreshToken = (user: Partial<IUserModel>) => {
@@ -16,7 +17,7 @@ export const generateRefreshToken = (user: Partial<IUserModel>) => {
   const refreshToken = jwt.sign(
     { _id: user._id, email: user.email },
     process.env.REFRESH_TOKEN_SECRET as string,
-    { expiresIn: '20m' },
+    { expiresIn: '2d' },
   );
   refreshTokens.push(refreshToken);
   return refreshToken;

@@ -35,10 +35,10 @@ export const ReadPet = async (req: Request, res: Response) => {
   }
 };
 export const ReadAll = async (req: Request, res: Response) => {
-  const { keyword } = req.query as { keyword?: string };
+  const { page } = req.query as unknown as { page: number };
 
   try {
-    const Pet = await getPetByName(keyword);
+    const Pet = await getPetByName(page);
     res.status(200).json(Pet);
   } catch (error) {
     errorHandler(error, res);

@@ -7,6 +7,7 @@ import userRouter from './routes/userRouter';
 import petRouter from './routes/petRouter';
 import login from './routes/authRouter';
 import cors from 'cors';
+import reqRouter from './routes/reqAdoptionRouter';
 const app = express();
 
 const StartServer = () => {
@@ -26,7 +27,7 @@ const StartServer = () => {
     }),
   );
 
-  app.use([userRouter, petRouter, login]);
+  app.use([userRouter, petRouter, login, reqRouter]);
   // handle undefined routes
   app.use((req, res) => {
     const error = new Error('Route not found');

@@ -14,10 +14,31 @@ export const addPet = async (
 };
 export const getPetById = async (id: string) =>
   await Pets.findById(id).populate([{ path: 'ownerId', select: 'name email' }]);
-export const getPetByName = async (keyword?: string) =>
-  await Pets.find(keyword ? { name: keyword } : {}).populate([
-    { path: 'ownerId', select: 'name email' },
-  ]);
+export const getPetByName = async (actual_page: number) => {
+  const page = actual_page || 1;
+  const PAGE_SIZE = 12;
+  const match = { $match: { name: '' } };
+  const sort = { $sort: { createdAt: -1 } };
+  const offset = (page - 1) * PAGE_SIZE;
+  const skip = { $skip: offset };
+  const limit = { $limit: PAGE_SIZE };
+  const results = await Pets.aggregate([skip, limit]);
+
+  const count = await Pets.countDocuments();
+  const totalPages = Math.ceil(count / PAGE_SIZE);
+  const hasNextPage = page < totalPages;
+  const hasPrevPage = page > 1;
+  return {
+    results,
+    pageInfo: {
+      currentPage: page,
+      totalPages,
+      hasNextPage,
+      hasPrevPage,
+      totalItems: count,
+    },
+  };
+};
 export const updatePetById = async (id: string, petData: IPets) =>
   await Pets.findByIdAndUpdate(id, petData, { new: true });
 export const deletePetById = async (id: string) =>
